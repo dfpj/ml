@@ -1,7 +1,8 @@
 from sklearn.metrics import mean_squared_error
-from sklearn.linear_model import SGDRegressor
+from sklearn.linear_model import SGDRegressor,LinearRegression
 import pandas as pd
 import numpy as np
+from sklearn.model_selection import train_test_split
 
 class SGD:
     def __init__(self):
@@ -50,6 +51,17 @@ class SGD:
             return self.b
         else:
             raise Exception("the first fit")
+    
+    def predict(self,x_test):
+        li = []
+        for item in x_test.values:
+            re = self.a * item[0]+ self.b
+            li.append(re)
+        return np.array(li)
+
+
+
+
 
 dataset = pd.read_csv("HW3/Q3/data.csv")
 dataset.head()
@@ -61,14 +73,25 @@ for col in dataset.iloc[:,:1]:
 data = dataset.iloc[:,:1]
 label = dataset.iloc[:,-1:]
 
-
+x_train,x_test,y_train,y_test = train_test_split(data,label,test_size=0.2,random_state=0)
 
 sgd = SGD()
-sgd.fit(data,label)
-print(sgd.coef)
-print(sgd.intercept)
+sgd.fit(x_train,y_train)
+y_pred = sgd.predict(x_test)
+print(mean_squared_error(y_test,y_pred))
 
-sgd_regressor = SGDRegressor()
-sgd_regressor.fit(data,label)
-print(sgd_regressor.coef_)
-print(sgd_regressor.intercept_)
+print("*" * 90)
+
+sgd_regressor = SGDRegressor(random_state=0)
+sgd_regressor.fit(x_train,y_train)
+y_pred= sgd_regressor.predict(x_test)
+print(mean_squared_error(y_test,y_pred))
+
+
+print("*" * 90)
+
+lr = LinearRegression()
+lr.fit(x_train,y_train)
+y_pred= lr.predict(x_test)
+print(mean_squared_error(y_test,y_pred))
+
