@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 class SGD:
     def __init__(self):
         # learning rate
-        self.alpha = 0.01
+        self.alpha = 0.001
         # initialze weights
         self.a = 0.5
         self.b = 1
@@ -22,7 +22,7 @@ class SGD:
     
     def get_sample(self,x,y,a,b):
         loss = self.loss_function(x,y,a,b)
-        if loss**2 > 0.0001:
+        if loss**2 > 0.01:
             a,b = self.get_new_parameter(x,y,a,b)
             self.get_sample(x,y,a,b)
         else:
@@ -60,6 +60,8 @@ class SGD:
         return np.array(li)
 
 
+import sys
+sys.setrecursionlimit(2000)
 
 
 
